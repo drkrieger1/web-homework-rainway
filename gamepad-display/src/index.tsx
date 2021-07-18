@@ -1,12 +1,16 @@
+import "@fontsource/roboto";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { SocketProvider } from './context/socketContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <SocketProvider>
+        <App />
+    </SocketProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

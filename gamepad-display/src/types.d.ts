@@ -19,10 +19,3 @@ interface SocketResponese {
     thumbsticks: Thumbstick,
     buttons: Buttons,
 }
-
-
-interface SocketContext {
-    url: string
-    connect: () => any
-    payload: SocketResponese
-}
