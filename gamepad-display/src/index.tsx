@@ -1,16 +1,25 @@
-import "@fontsource/roboto";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core/styles';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SocketProvider } from './context/socketContext';
+import theme from './theme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <SocketProvider>
-        <App />
-    </SocketProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline /> 
+      <SocketProvider>
+          <App />
+      </SocketProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

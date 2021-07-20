@@ -16,6 +16,6 @@ interface Thumbstick {
 }
 
 interface SocketResponese {
-    thumbsticks: Thumbstick,
-    buttons: Buttons,
+    buttons: Buttons
+    thumbsticks: Thumbstick
 }

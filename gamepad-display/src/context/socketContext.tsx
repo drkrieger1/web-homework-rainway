@@ -1,49 +1,46 @@
-import React, { useEffect, useReducer } from "react";
+import * as React from "react";
 
 type ActionType = 
     | { type: 'CONNECT', payload: string }
     | { type: 'DISCONNECT' }
     | { type: 'SOCKET_UPDATE', payload: SocketResponese }
 
-interface DefaultState {
+interface IdefaultState {
     url: string
-    response: SocketResponese | null
+    responese: SocketResponese | null
 }
 
-const initialState: DefaultState = { 
+const initialState: IdefaultState = { 
     // url: 'ws://127.0.0.1:8000',
     url: '',
-    response: null,
+    responese: null,
 }
 
-const SocketContext = React.createContext<
-    { state: DefaultState; dispatch: React.Dispatch<ActionType>;}
-    >({
-        state: initialState,
+interface IsocketContext {
+    connected: boolean
+    responese: SocketResponese | null
+    dispatch: React.Dispatch<ActionType>
+}
+
+const SocketContext = React.createContext<IsocketContext>({
+        connected: false,
+        responese: null,
         dispatch: () => null,
     });
 
-const socketReducer = (state: DefaultState, action: ActionType): DefaultState =>{
+const socketReducer = (state: IdefaultState, action: ActionType): IdefaultState => {
     switch(action.type) {
         case 'CONNECT':
             return { ...state, url: action.payload };
         case 'DISCONNECT':
-            return { url: '', response: null };
+            return { url: '', responese: null };
         case 'SOCKET_UPDATE':
-            return { ...state, response: action.payload };
+            return { ...state, responese: action.payload };
     }
 } 
 
-let socket: WebSocket | null = null;
-
 const SocketProvider: React.FC = ({ children }) =>  {
-    const [state, dispatch] = useReducer(socketReducer, initialState);
-    
-    useEffect(() => {
-        return () => {
-            socket && socket.close();
-        }
-    });
+    const [state, dispatch] = React.useReducer(socketReducer, initialState);
     
     const updateGamepad = (event: any) => {
         dispatch({ 
@@ -52,20 +49,33 @@ const SocketProvider: React.FC = ({ children }) =>  {
         })
     }
 
-    if (!socket && state.url.length) {
-        console.log('connecting to websocket..');
-        socket = new WebSocket(state.url);
-
-        socket.addEventListener('message', updateGamepad);
-        socket.addEventListener('onclose', () => alert('Conection was closed'));
-        socket.addEventListener('error', () => alert('Conection errored'));
+     React.useEffect(() => {
+        let socket: WebSocket | undefined = undefined;
         
-    } else if (socket && !state.url.length) {
-        socket.close();
-    }
+        if (state.url.length) {
+            try {
+                socket = new WebSocket(state.url);
+                socket.addEventListener('message', updateGamepad);
+                socket.addEventListener('onclose', () => alert('Connection was closed'));
+                socket.addEventListener('error', () => alert('Connection errored'));
+            } catch (e) {
+                alert('URL is invalid');
+                dispatch({ type: 'DISCONNECT' });
+            }
+        } 
+        
+        return () => {
+            socket && socket.close();
+        }
+    },[state.url]);
 
     return (
-        <SocketContext.Provider value={{ state:state, dispatch:dispatch }}>
+        <SocketContext.Provider 
+            value={{ 
+                connected: !!state.url.length, 
+                responese: state.responese, 
+                dispatch, 
+            }}>
             { children }
         </SocketContext.Provider>
     );

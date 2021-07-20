@@ -1,20 +1,15 @@
-import React, { useContext } from 'react';
-import TextField from '@material-ui/core/TextField';
+import React  from 'react';
+import SocketInput from './components/SocketInput';
+import ControllerDisplay from './components/ControllerDisplay';
 
-
-import './App.css';
-import { SocketContext } from './context/socketContext';
-
-const App = () => {
-  const { state, dispatch } = useContext(SocketContext);
-
-  console.log(state);
-  console.log(dispatch);
+const App:React.FC = () => {
   return (
     <>
-      <form noValidate autoComplete="off">
-        <TextField id="standard-basic" label="Standard" fullWidth />
-      </form>
+      <div>
+        <SocketInput />
+        <ControllerDisplay />
+      </div>
+ 
     </>
   );
 }
