@@ -1,21 +1,89 @@
 import React, { useContext } from 'react';
 import { Container } from '@material-ui/core';
 import { SocketContext } from '../context/socketContext';
-import { ReactComponent as XboxController } from '../xboxController.svg';
 
 const ControllerDisplay: React.FC = () => {
   const { responese } = useContext(SocketContext);
+  const enhance: number = 15;
+  const calcStickPosition = (center: Axis, moveTo: Axis) => {
+    // TODO: handle 0
+    return {
+      x: center.x + moveTo.x * enhance,
+      y: center.y + moveTo.y * enhance,
+    };
+  };
+
+  // TODO: dry
+  const leftStick = () => {
+    const center: Axis = {
+      x: -145.53662,
+      y: 141.94543,
+    };
+
+    if (!responese) {
+      return;
+    }
+    const { left } = responese.thumbsticks;
+    const position: Axis = responese ? calcStickPosition(center, left) : center;
+
+    const shadow: Axis = {
+      x: left.x > 0 ? position.x + 1 : position.x - 1,
+      y: left.y > 0 ? position.y + 1 : position.y - 1,
+    };
+    return (
+      <>
+        <circle cx={-145.53662} cy={141.94543} r={41.742027} className="c" />
+        <circle cx={-145.53662} cy={141.94543} r={35.722469} className="d" />
+        <circle cx={shadow.x} cy={shadow.y} r={32.432394} className="shadow" />
+        <circle cx={position.x} cy={position.y} r={32.332394} className="e" />
+        <circle cx={position.x} cy={position.y} r={22.973162} className="f" />
+      </>
+    );
+  };
+
+  const rightStick = () => {
+    const center: Axis = {
+      x: 75.314659,
+      y: 228.16759,
+    };
+
+    if (!responese) {
+      return;
+    }
+    const { right } = responese.thumbsticks;
+
+    const position: Axis = responese
+      ? calcStickPosition(center, right)
+      : center;
+    const shadow: Axis = {
+      x: right.x > 0 ? position.x + 1 : position.x - 1,
+      y: right.y > 0 ? position.y + 1 : position.y - 1,
+    };
+
+    return (
+      <>
+        <circle cx={75.314659} cy={228.16759} r={41.742027} className="c" />
+        <circle cx={75.314659} cy={228.16759} r={35.722469} className="d" />
+        <circle cx={shadow.x} cy={shadow.y} r={32.42394} className="shadow" />
+        <circle cx={position.x} cy={position.y} r={32.332394} className="e" />
+        <circle
+          cx={position.x.toString()}
+          cy={position.y.toString()}
+          r={22.973162}
+          className="f"
+        />
+      </>
+    );
+  };
 
   return (
     <>
-      <Container style={{ paddingTop: '3em' }} maxWidth="sm">
+      {/* <Container style={{ paddingTop: '3em' }} maxWidth="sm">
         {JSON.stringify(responese)}
-
-        <XboxController style={{ border: 'solid red 2px', width: '100%' }} />
-      </Container>
+      </Container> */}
       <Container style={{ paddingTop: '3em' }} maxWidth="sm">
         <svg
-          style={{ border: 'solid red 2px', width: '100%' }}
+          style={{ width: '100%' }}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="5 -20 200 200"
           height="300"
@@ -97,30 +165,7 @@ const ControllerDisplay: React.FC = () => {
                   strokeWidth: 11.9072094,
                 }}
               />
-              <circle
-                r="41.742027"
-                cy="141.94543"
-                cx="-145.53662"
-                className="c"
-              />
-              <circle
-                cx="-145.53662"
-                cy="141.94543"
-                r="35.722469"
-                className="d"
-              />
-              <circle
-                r="32.332394"
-                cy="141.94543"
-                cx="-145.53662"
-                className="e"
-              />
-              <circle
-                cx="-145.53662"
-                cy="141.94543"
-                r="22.973162"
-                className="f"
-              />
+              {leftStick()}
               <path
                 d="m-113.77342 49.182527c-2.16475 0.007-4.54727 0.167191-7.27345 0.531233-8.72379 1.164937-20.96902 4.415833-32.99799 8.723498-12.02897 4.307668-23.84049 9.671857-32.40164 14.358816-8.56114 4.686956-13.87112 8.696452-18.23299 13.031245-1.75588 1.744972-3.35958 3.554375-5.04828 6.00325 4.80668-3.065182 10.77219-6.738932 17.35502-10.250538 10.87141-5.799344 23.37249-11.128967 33.20056-15.168581 9.82806-4.039616 16.98246-6.78897 24.55043-8.059457 7.56798-1.270489 15.54889-1.062392 20.37705-0.932759 4.82817 0.12963 6.50371 0.180713 9.20771 2.176095 2.704 1.995379 6.436299 5.934993 12.474692 12.177032 6.038392 6.242045 14.404424 14.808568 20.804933 21.481894 6.400506 6.673326 10.878971 11.497605 15.408359 14.519525 12.213622 5.92761 24.045228 5.42444 32.573207 5.43895 6.230045 0.01 15.2553217 0.0123 24.7158033-0.0413 9.4604807 0.0536 18.4857567 0.0511 24.7158037 0.0413 10.024201 0.0649 24.902703-0.43188 32.573204-5.43895 4.529389-3.02192 9.007856-7.846202 15.408362-14.519525 6.400506-6.673324 14.766538-15.239852 20.804933-21.481894 6.038393-6.242037 9.770683-10.181653 12.474693-12.177032 2.704-1.995382 4.37937-2.046293 5.21725-2.071709 0.83788-0.02543 0.83785-0.02551 4.82813-0.129707 3.99028-0.104216 11.9714-0.312409 19.53937 0.95808 7.56798 1.270487 14.72238 4.019841 24.55044 8.059457 9.82806 4.039614 22.32914 9.369237 33.20056 15.168581 6.01192 3.207052 11.48997 6.540087 16.06259 9.431983-1.48083-2.043824-2.91599-3.639288-4.47105-5.184695-4.36187-4.334793-9.67185-8.344289-18.233-13.031245-8.56114-4.686959-20.37318-10.051148-32.40215-14.358816-12.02897-4.307665-24.2742-7.558561-32.99799-8.723498-8.72378-1.164936-13.92539-0.244096-19.75021 1.110528-5.824827 1.354622-12.272201 3.142956-17.663523 3.847309-5.391322 0.704355-9.726253 0.32503-26.79423 0.135393-10.117992-0.112417-24.524858-0.154993-37.835416-0.173633-0.109434-0.01455-0.18001-0.01937-0.216008-0.0186-0.120501 0.0026-0.120357 0.0026-15.0207878 0.0026-1.1965792 0-2.9741177 0.0011-4.34857181 0.0011-1.37451296-0.000098-3.15194669-0.0011-4.34857169-0.0011-14.9004347 0-14.9008087 0.000003-15.0213047-0.0026-0.036-0.000794-0.106058 0.004-0.215491 0.0186-13.310612 0.01863-27.717894 0.06121-37.835933 0.173633-17.067975 0.189637-21.402392 0.568962-26.793714-0.135393-5.391319-0.704353-11.839212-2.492687-17.664039-3.847309-4.00456-0.931304-7.71429-1.657255-12.47676-1.641761z"
                 style={{
@@ -193,30 +238,7 @@ const ControllerDisplay: React.FC = () => {
                   wordSpacing: 'normal',
                 }}
               />
-              <circle
-                cx="75.314659"
-                cy="228.16759"
-                r="41.742027"
-                className="c"
-              />
-              <circle
-                r="35.722469"
-                cy="228.16759"
-                cx="75.314659"
-                className="d"
-              />
-              <circle
-                cx="75.314659"
-                cy="228.16759"
-                r="32.332394"
-                className="e"
-              />
-              <circle
-                r="22.973162"
-                cy="228.16759"
-                cx="75.314659"
-                className="f"
-              />
+              {rightStick()}
               <path
                 d="m119.09363 152.72453-8.60187-11.86097 7.21275-10.178h-6.25105l-4.06052 6.01063-4.06051-6.01063h-5.983914l6.945614 10.178-8.334737 11.86097h6.224337l5.20921-7.50661 5.20921 7.50661z"
                 style={{

@@ -11,3 +11,52 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.shadow {
+  fill-opacity: 0.5;
+  fill: #000;
+  opacity: 0.5;
+  stroke-linecap: square;
+  stroke-width: 8.55154037;
+}
+.a {
+  fill-opacity: 1;
+  fill: #000;
+  opacity: 1;
+  stroke-linecap: square;
+  stroke-width: 11.3814106;
+}
+.b {
+  fill-opacity: 1;
+  fill: #2f3336;
+  opacity: 1;
+  stroke-linecap: square;
+  stroke-width: 10.5312891;
+}
+.c {
+  fill-opacity: 1;
+  fill: #2f3336;
+  opacity: 1;
+  stroke-linecap: square;
+  stroke-width: 9.99256516;
+}
+.d {
+  fill-opacity: 1;
+  fill: #000;
+  opacity: 1;
+  stroke-linecap: square;
+  stroke-width: 8.55154037;
+}
+.e {
+  fill-opacity: 1;
+  fill: #22272a;
+  opacity: 1;
+  stroke-linecap: square;
+  stroke-width: 7.73999691;
+}
+.f {
+  fill-opacity: 1;
+  fill: #1c1d21;
+  opacity: 1;
+  stroke-linecap: square;
+  stroke-width: 5.49949789;
+}
